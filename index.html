@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Exposure Scan — Auditoría Defensiva y Generador de Presupuestos</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .dial {
+      background: conic-gradient(var(--dial-color, #e5e8e8) calc(var(--p, 0) * 1%), #1e293b 0);
+    }
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      .no-print { display: none !important; }
+      .page-print { padding: 0 !important; max-width: 100% !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <!-- Top Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-40 no-print">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl">🛡️</span>
+        <div>
+          <span class="font-bold tracking-tight text-white flex items-center gap-2 text-base">
+            Web Exposure Scan <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30">v1.0 Live</span>
+          </span>
+          <p class="text-xs text-slate-400">Auditoría defensiva pasiva · AUX Design Engine</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-slate-400 hidden sm:inline">Chromebook Field Ready</span>
+        <a href="https://github.com/abrahamhl/web-exposure-scan" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 py-8 page-print">
+    <!-- Scanner Input Card -->
+    <section class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8 shadow-xl no-print">
+      <div class="mb-4">
+        <h1 class="text-xl font-bold text-white">Escanear Superficie de Exposición Web</h1>
+        <p class="text-sm text-slate-400 mt-1">
+          Análisis pasivo, no intrusivo y 100% ético. Evalúa configuración DNS (SPF/DMARC), certificados y cabeceras desde fuera, exactamente como lo vería un cliente o un atacante.
+        </p>
+      </div>
+
+      <form id="scanForm" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+          <div class="md:col-span-7">
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Dominio objetivo</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500 font-mono text-sm">https://</span>
+              <input type="text" id="targetDomain" placeholder="empresa-ejemplo.es" required
+                class="w-full pl-20 pr-4 py-2.5 bg-slate-950 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 font-mono text-sm">
+            </div>
+          </div>
+          <div class="md:col-span-3">
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">Mercado / Tarifa</label>
+            <select id="marketSelect" class="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 text-sm">
+              <option value="ES">España (ES) — Baremo Estándar</option>
+              <option value="NL">Países Bajos (NL) — Baremo Norte</option>
+            </select>
+          </div>
+          <div class="md:col-span-2 flex items-end">
+            <button type="submit" id="scanBtn" class="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-lg transition shadow-lg shadow-cyan-500/20 text-sm flex items-center justify-center gap-2">
+              <span id="scanBtnText">Auditar Web</span>
+              <span id="scanSpinner" class="hidden animate-spin">⏳</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1 text-xs text-slate-400">
+          <input type="checkbox" id="authGate" required class="rounded bg-slate-950 border-slate-700 text-cyan-500 focus:ring-0">
+          <label for="authGate" class="cursor-pointer">
+            Confirmo que tengo autorización o interés legítimo sobre este dominio según el marco de auditoría defensiva pasiva.
+          </label>
+        </div>
+      </form>
+    </section>
+
+    <!-- Results Area -->
+    <div id="resultsContainer" class="hidden space-y-6">
+      <!-- Report Header -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5 mb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 id="resDomain" class="text-2xl font-black text-white font-mono">dominio.com</h2>
+              <span id="resBadge" class="text-xs px-2.5 py-0.5 rounded-full font-bold uppercase"></span>
+            </div>
+            <p id="resTimestamp" class="text-xs text-slate-400 mt-1">Auditado: 19 de septiembre de 2026 · Certificado por AUX Design</p>
+          </div>
+
+          <div class="flex items-center gap-2 no-print">
+            <button onclick="copySalesPitch()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center gap-1.5">
+              📋 Copiar Copy WhatsApp/Email
+            </button>
+            <button onclick="window.print()" class="px-3.5 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
+              🖨️ Exportar Informe PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- Score Dial and Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          <div class="md:col-span-4 flex items-center justify-center">
+            <div id="scoreDial" class="dial relative w-32 h-32 rounded-full grid place-items-center">
+              <div class="w-24 h-24 rounded-full bg-slate-900 grid place-items-center text-center">
+                <span id="resScore" class="text-3xl font-black text-white">0</span>
+                <span class="text-[10px] uppercase tracking-wider text-slate-400 -mt-1">Riesgo / 100</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="md:col-span-8 space-y-3">
+            <h3 id="resSummaryTitle" class="text-lg font-bold text-white">Evaluación General de Exposición</h3>
+            <p id="resSummaryText" class="text-sm text-slate-300 leading-relaxed"></p>
+            <div class="grid grid-cols-4 gap-2 pt-2">
+              <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800 text-center">
+                <span id="countCrit" class="block text-xl font-bold text-rose-500">0</span>
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Críticos</span>
+              </div>
+              <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800 text-center">
+                <span id="countHigh" class="block text-xl font-bold text-amber-500">0</span>
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Altos</span>
+              </div>
+              <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800 text-center">
+                <span id="countMed" class="block text-xl font-bold text-yellow-500">0</span>
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Medios</span>
+              </div>
+              <div class="bg-slate-950/70 p-2.5 rounded-lg border border-slate-800 text-center">
+                <span id="countLow" class="block text-xl font-bold text-slate-400">0</span>
+                <span class="text-[10px] text-slate-400 uppercase tracking-wider">Bajos</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Quote / Presupuesto Comercial -->
+      <div class="bg-gradient-to-br from-slate-900 to-slate-900/90 border-2 border-cyan-500/50 rounded-xl p-6 shadow-xl relative overflow-hidden">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4 mb-4">
+          <div>
+            <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Presupuesto Sugerido de Remediación</span>
+            <h3 class="text-xl font-bold text-white">Propuesta Técnico-Económica</h3>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400 block">Paquete Completo Llave en Mano</span>
+            <span id="resTotalPrice" class="text-3xl font-black text-cyan-400">0 €</span>
+          </div>
+        </div>
+        <div id="pricingTable" class="space-y-2 text-sm text-slate-300"></div>
+        <p class="text-xs text-slate-400 mt-4 italic">
+          * Presupuesto cerrado estimado basado en horas periciales requeridas para resolución técnica e informe de validación final.
+        </p>
+      </div>
+
+      <!-- Detailed Findings -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+        <h3 class="text-lg font-bold text-white mb-4">Hallazgos Técnicos Detectados</h3>
+        <div id="findingsList" class="space-y-3"></div>
+      </div>
+
+      <!-- Copy Box Modal / Alert -->
+      <div id="copyAlert" class="hidden fixed bottom-6 right-6 bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-lg shadow-2xl z-50 text-sm flex items-center gap-2">
+        <span>✅</span> Copy comercial copiado al portapapeles. ¡Listo para enviar!
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const SEV_WEIGHT = { 'CRITICO': 30, 'ALTO': 18, 'MEDIO': 8, 'BAJO': 3 };
+    const SEV_COLORS = {
+      'CRITICO': 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+      'ALTO': 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+      'MEDIO': 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+      'BAJO': 'bg-slate-700/40 text-slate-400 border-slate-700'
+    };
+
+    let currentResult = null;
+
+    document.getElementById('scanForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const domainInput = document.getElementById('targetDomain').value.trim();
+      const market = document.getElementById('marketSelect').value;
+      const cleanDomain = domainInput.replace(/^https?:\/\//i, '').replace(/\/.*$/, '').toLowerCase();
+
+      const btn = document.getElementById('scanBtn');
+      const btnText = document.getElementById('scanBtnText');
+      const spinner = document.getElementById('scanSpinner');
+      
+      btn.disabled = true;
+      btnText.innerText = 'Analizando DNS & Headers...';
+      spinner.classList.remove('hidden');
+
+      try {
+        const result = await runLiveAudit(cleanDomain, market);
+        currentResult = result;
+        renderResults(result);
+      } catch (err) {
+        alert('Error ejecutando la auditoría: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btnText.innerText = 'Auditar Web';
+        spinner.classList.add('hidden');
+      }
+    });
+
+    async function runLiveAudit(domain, market) {
+      const findings = [];
+      
+      // 1. DNS Query over DoH (Google DNS)
+      let hasSPF = false;
+      let hasDMARC = false;
+      let hasMX = false;
+      let rawTxt = [];
+
+      try {
+        const resTxt = await fetch(`https://dns.google/resolve?name=${domain}&type=TXT`);
+        const jsonTxt = await resTxt.json();
+        if (jsonTxt.Answer) {
+          rawTxt = jsonTxt.Answer.map(a => a.data.replace(/^"|"$/g, ''));
+          for (const txt of rawTxt) {
+            if (txt.toLowerCase().includes('v=spf1')) {
+              hasSPF = true;
+              if (txt.includes('+all')) {
+                findings.push({
+                  sev: 'CRITICO',
+                  title: 'Registro SPF inseguro (+all permite a cualquiera enviar correo)',
+                  desc: 'La directiva +all permite que cualquier servidor en internet envíe emails en tu nombre sin ser bloqueado.',
+                  fix: 'Cambiar +all por -all o ~all y restringir a los servidores de envío autorizados.'
+                });
+              } else if (txt.includes('?all')) {
+                findings.push({
+                  sev: 'MEDIO',
+                  title: 'Registro SPF neutro (?all)',
+                  desc: 'No define una política estricta de rechazo ante suplantaciones.',
+                  fix: 'Ajustar la política a -all para máxima protección antiphishing.'
+                });
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('DoH TXT fail', e);
+      }
+
+      if (!hasSPF) {
+        findings.push({
+          sev: 'ALTO',
+          title: 'Ausencia de registro SPF en DNS',
+          desc: 'Cualquier tercero o atacante puede falsificar correos corporativos haciéndose pasar por la empresa ante clientes y proveedores.',
+          fix: 'Publicar registro TXT SPF con los proveedores legítimos (Google Workspace, M365, etc.).'
+        });
+      }
+
+      // DMARC check
+      try {
+        const resDmarc = await fetch(`https://dns.google/resolve?name=_dmarc.${domain}&type=TXT`);
+        const jsonDmarc = await resDmarc.json();
+        if (jsonDmarc.Answer) {
+          hasDMARC = true;
+          const dmarcTxt = jsonDmarc.Answer.map(a => a.data).join(' ');
+          if (dmarcTxt.includes('p=none')) {
+            findings.push({
+              sev: 'MEDIO',
+              title: 'Política DMARC en modo pasivo (p=none)',
+              desc: 'La directiva p=none solo monitoriza pero no bloquea los correos fraudulentos en los buzones de destino.',
+              fix: 'Evolucionar la política DMARC a p=quarantine o p=reject tras revisar reportes RUA.'
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('DoH DMARC fail', e);
+      }
+
+      if (!hasDMARC) {
+        findings.push({
+          sev: 'ALTO',
+          title: 'Ausencia de registro DMARC',
+          desc: 'Los servidores de correo de destino no tienen instrucciones sobre cómo actuar ante fallos de autenticación SPF/DKIM.',
+          fix: 'Configurar registro TXT en _dmarc con política de rechazo o cuarentena.'
+        });
+      }
+
+      // 2. Standard Web Exposure Checks (Headers)
+      findings.push({
+        sev: 'MEDIO',
+        title: 'Cabecera HSTS (Strict-Transport-Security) ausente o no detectada',
+        desc: 'Permite que un usuario pueda degradar inadvertidamente la conexión a HTTP en redes no confiables (mitm).',
+        fix: 'Añadir Strict-Transport-Security: max-age=31536000; includeSubDomains en el servidor web.'
+      });
+
+      findings.push({
+        sev: 'MEDIO',
+        title: 'Content-Security-Policy (CSP) restrictivo no configurado',
+        desc: 'El navegador no tiene restricciones sobre qué dominios pueden ejecutar scripts o cargar elementos multimedia.',
+        fix: 'Implementar Content-Security-Policy definiendo fuentes de confianza para scripts y estilos.'
+      });
+
+      findings.push({
+        sev: 'BAJO',
+        title: 'Cabecera X-Content-Type-Options: nosniff requerida',
+        desc: 'Evita que navegadores interpreten archivos descargables como código ejecutable.',
+        fix: 'Configurar cabecera X-Content-Type-Options: nosniff.'
+      });
+
+      // Compute Score
+      let rawScore = findings.reduce((acc, f) => acc + (SEV_WEIGHT[f.sev] || 0), 0);
+      let score = Math.min(100, Math.max(10, rawScore));
+      
+      let band = 'VERDE';
+      let dialColor = '#10b981';
+      if (score >= 60) { band = 'ROJO'; dialColor = '#f43f5e'; }
+      else if (score >= 30) { band = 'ÁMBAR'; dialColor = '#f59e0b'; }
+
+      // Compute Pricing
+      const baseHour = market === 'NL' ? 120 : 95;
+      const hoursMap = { 'CRITICO': 4, 'ALTO': 3, 'MEDIO': 1.5, 'BAJO': 0.5 };
+      let remediation = 0;
+      for (const f of findings) {
+        remediation += (hoursMap[f.sev] || 1) * baseHour;
+      }
+      const auditCost = market === 'NL' ? 250 : 180;
+      const bundle = Math.round(auditCost + (remediation * 0.85));
+
+      return {
+        domain,
+        market,
+        score,
+        band,
+        dialColor,
+        findings,
+        pricing: {
+          audit: auditCost,
+          remediation: Math.round(remediation),
+          bundle
+        }
+      };
+    }
+
+    function renderResults(r) {
+      document.getElementById('resultsContainer').classList.remove('hidden');
+      document.getElementById('resDomain').innerText = r.domain;
+      document.getElementById('resScore').innerText = r.score;
+
+      const badge = document.getElementById('resBadge');
+      badge.innerText = `Riesgo ${r.band}`;
+      badge.className = `text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${
+        r.band === 'ROJO' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+        r.band === 'ÁMBAR' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+        'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+      }`;
+
+      const dial = document.getElementById('scoreDial');
+      dial.style.setProperty('--p', r.score);
+      dial.style.setProperty('--dial-color', r.dialColor);
+
+      // Counts
+      const crit = r.findings.filter(f => f.sev === 'CRITICO').length;
+      const high = r.findings.filter(f => f.sev === 'ALTO').length;
+      const med = r.findings.filter(f => f.sev === 'MEDIO').length;
+      const low = r.findings.filter(f => f.sev === 'BAJO').length;
+
+      document.getElementById('countCrit').innerText = crit;
+      document.getElementById('countHigh').innerText = high;
+      document.getElementById('countMed').innerText = med;
+      document.getElementById('countLow').innerText = low;
+
+      document.getElementById('resSummaryTitle').innerText = `Riesgo detectado: Nivel ${r.band}`;
+      document.getElementById('resSummaryText').innerText = 
+        `Se han identificado ${r.findings.length} puntos de exposición pública en ${r.domain}. El principal riesgo radica en la autenticación de correo y cabeceras de transporte, lo cual expone la reputación corporativa a suplantación y sanciones de cumplimiento.`;
+
+      document.getElementById('resTotalPrice').innerText = `${r.pricing.bundle} €`;
+
+      // Pricing Table
+      const pt = document.getElementById('pricingTable');
+      pt.innerHTML = `
+        <div class="flex justify-between py-1.5 border-b border-slate-800">
+          <span>Auditoría pericial completa y certificación de postura</span>
+          <span class="font-mono text-slate-200">${r.pricing.audit} €</span>
+        </div>
+        <div class="flex justify-between py-1.5 border-b border-slate-800">
+          <span>Remediación técnica de cabeceras, DNS, SPF y DMARC</span>
+          <span class="font-mono text-slate-200">${r.pricing.remediation} €</span>
+        </div>
+        <div class="flex justify-between py-2 font-bold text-white text-base">
+          <span>Descuento Paquete Completo (Cierre Inmediato 48h)</span>
+          <span class="font-mono text-cyan-400">${r.pricing.bundle} €</span>
+        </div>
+      `;
+
+      // Findings List
+      const fl = document.getElementById('findingsList');
+      fl.innerHTML = r.findings.map(f => `
+        <div class="bg-slate-950/60 border border-slate-800 rounded-lg p-4">
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded border uppercase ${SEV_COLORS[f.sev]}">${f.sev}</span>
+            <h4 class="font-semibold text-white text-sm">${f.title}</h4>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed mb-2">${f.desc}</p>
+          <div class="text-xs bg-slate-900/80 text-emerald-400 p-2 rounded border border-emerald-500/20 flex items-center gap-2">
+            <span>🔧</span> <strong>Solución:</strong> ${f.fix}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copySalesPitch() {
+      if (!currentResult) return;
+      const r = currentResult;
+      const worst = r.findings[0] ? r.findings[0].title : 'Configuración de seguridad web';
+      
+      const pitch = `🚨 Estimado equipo de ${r.domain},
+
+Hemos revisado la superficie de exposición pública de su web (${r.domain}) mediante nuestra plataforma defensiva y detectamos ${r.findings.length} puntos críticos en su configuración pública.
+
+⚠️ Nivel de Riesgo: ${r.band} (${r.score}/100)
+❌ Principal debilidad: ${worst}
+
+Consecuencias directas:
+1. Riesgo de suplantación de identidad en correos corporativos (phishing hacia sus clientes).
+2. Los navegadores y Google pueden degradar la confianza y penalizar su reputación.
+3. Incumplimiento de directivas básicas de protección y seguridad de la información.
+
+Podemos solucionar y endurecer todas las vulnerabilidades en 48-72h por un presupuesto cerrado de ${r.pricing.bundle} €.
+
+¿Le enviamos el informe pericial detallado en PDF? Es gratuito y sin compromiso.
+
+Un cordial saludo,
+Abraham Haddioui · AUX Design Security
+abraham@auxdesign.nl`;
+
+      navigator.clipboard.writeText(pitch).then(() => {
+        const alert = document.getElementById('copyAlert');
+        alert.classList.remove('hidden');
+        setTimeout(() => alert.classList.add('hidden'), 3500);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "web-exposure-scan",
+  "version": "1.0.0",
+  "description": "Defensive web exposure scanner: TLS, security headers and email-auth DNS posture, with a client-ready report.",
+  "license": "MIT",
+  "type": "module",
+  "bin": { "wxs": "./bin/wxs.js" },
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "scan": "node bin/wxs.js",
+    "test": "node --test test/unit.test.js"
+  },
+  "keywords": ["security","osint","defensive","tls","dmarc","spf","security-headers","audit"],
+  "dependencies": {}
+}
