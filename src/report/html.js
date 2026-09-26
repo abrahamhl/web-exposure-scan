@@ -6,7 +6,7 @@ export const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
 export const SEV_COLOR = { critical: '#b42318', high: '#c4320a', medium: '#a15c07', low: '#475467' };
-const BAND = { 'ROJO': '#b42318', 'ÁMBAR': '#c4320a', 'VERDE-BAJO': '#a15c07', 'VERDE': '#067647' };
+const BAND = { 'ROJO': '#b42318', 'ÁMBAR': '#dc6803', 'VERDE-BAJO': '#a15c07', 'VERDE': '#067647' };
 const EMAIL = /^dns-(spf|dmarc|mx|dkim|no-mail)/;
 
 export const BASE_CSS = `
