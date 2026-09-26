@@ -1,0 +1,101 @@
+{
+  "tool": "web-exposure-scan",
+  "version": "1.1.0",
+  "status": "ok",
+  "domain": "bakkerij-voorbeeld.example",
+  "demo": true,
+  "startedAt": "2026-09-28T09:10:00.000Z",
+  "finishedAt": "2026-09-28T09:10:00.000Z",
+  "risk": {
+    "score": 62,
+    "band": "ÁMBAR"
+  },
+  "findings": [
+    {
+      "id": "dns-dmarc-missing",
+      "severity": "high",
+      "title": "Sin registro DMARC",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "hdr-hsts",
+      "severity": "high",
+      "title": "Falta HSTS",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "dns-spf-soft",
+      "severity": "medium",
+      "params": {
+        "tail": "~all"
+      },
+      "title": "SPF en modo permisivo",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "http-no-https-redirect",
+      "severity": "medium",
+      "params": {
+        "domain": "bakkerij-voorbeeld.example",
+        "code": 200
+      },
+      "title": "Sin redirección",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "dns-dkim-not-found",
+      "severity": "low",
+      "params": {
+        "selectors": [
+          "selector1",
+          "selector2",
+          "google",
+          "default"
+        ]
+      },
+      "title": "Sin DKIM",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "dns-caa-missing",
+      "severity": "low",
+      "title": "Sin CAA",
+      "detail": "",
+      "fix": ""
+    }
+  ],
+  "evidence": {
+    "tls": {
+      "protocol": "TLSv1.3",
+      "cipher": "TLS_AES_128_GCM_SHA256",
+      "issuer": "Let's Encrypt",
+      "validTo": "Dec 14 09:00:00 2026 GMT",
+      "daysUntilExpiry": 79,
+      "chainAuthorized": true
+    },
+    "http": {
+      "statusCode": 200,
+      "server": null,
+      "presentSecurityHeaders": [
+        "x-content-type-options"
+      ],
+      "redirect": false
+    },
+    "dns": {
+      "spf": "v=spf1 include:spf.protection.outlook.com ~all",
+      "dmarc": null,
+      "mxCount": 1,
+      "dkimSelectorsFound": [],
+      "caaCount": 0
+    },
+    "redirect": {
+      "httpStatus": 200,
+      "redirectsToHttps": false
+    }
+  }
+}

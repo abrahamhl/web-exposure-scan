@@ -4,8 +4,8 @@
 // domain the operator has not explicitly claimed the right to assess.
 
 export const AUTHORIZATION_NOTICE = `
-This scanner performs PASSIVE checks only: a TLS handshake, one HTTPS GET of the
-homepage, and public DNS lookups. It sends no payloads, tries no credentials, and
+This scanner performs PASSIVE checks only: a TLS handshake, one HTTPS and one HTTP
+GET of the homepage, and public DNS lookups. It sends no payloads, tries no credentials, and
 never attempts to bypass any control. Even so, only run it against domains you own
 or have written permission to assess.
 `.trim();

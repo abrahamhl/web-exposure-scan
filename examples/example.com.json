@@ -1,0 +1,129 @@
+{
+  "tool": "web-exposure-scan",
+  "version": "1.1.0",
+  "status": "ok",
+  "domain": "example.com",
+  "startedAt": "2026-09-26T03:08:52.071Z",
+  "finishedAt": "2026-09-26T03:08:52.300Z",
+  "risk": {
+    "score": 73,
+    "band": "ROJO"
+  },
+  "pricing": {
+    "market": "ES",
+    "currency": "EUR",
+    "counts": {
+      "critical": 0,
+      "high": 2,
+      "medium": 3,
+      "low": 3
+    },
+    "auditFee": 200,
+    "remediation": 865,
+    "bundle": 965,
+    "note": "Precios orientativos generados por el motor. Revísalos antes de enviarlos a un cliente."
+  },
+  "findings": [
+    {
+      "id": "hdr-hsts",
+      "severity": "high",
+      "title": "Falta HSTS (Strict-Transport-Security)",
+      "detail": "Sin HSTS, un visitante puede ser degradado a HTTP en la primera conexión y quedar expuesto a interceptación en redes públicas.",
+      "fix": "Añadir: Strict-Transport-Security: max-age=31536000; includeSubDomains"
+    },
+    {
+      "id": "hdr-csp",
+      "severity": "high",
+      "title": "Falta Content-Security-Policy",
+      "detail": "CSP es la defensa principal contra XSS e inyección de scripts de terceros. Sin ella, cualquier script inyectado se ejecuta.",
+      "fix": "Empezar en modo aviso: Content-Security-Policy-Report-Only: default-src 'self', y endurecer desde ahí."
+    },
+    {
+      "id": "hdr-xfo",
+      "severity": "medium",
+      "title": "Falta X-Frame-Options",
+      "detail": "Permite que la web se cargue dentro de un iframe ajeno (clickjacking): un atacante superpone tu web bajo su interfaz.",
+      "fix": "Añadir: X-Frame-Options: SAMEORIGIN (o frame-ancestors en la CSP)."
+    },
+    {
+      "id": "hdr-xcto",
+      "severity": "medium",
+      "title": "Falta X-Content-Type-Options",
+      "detail": "El navegador puede adivinar el tipo de un archivo y ejecutar como script algo que no lo era.",
+      "fix": "Añadir: X-Content-Type-Options: nosniff"
+    },
+    {
+      "id": "http-no-https-redirect",
+      "severity": "medium",
+      "params": {
+        "domain": "example.com",
+        "code": 200
+      },
+      "title": "http:// no redirige a https://",
+      "detail": "Quien escribe example.com sin https se queda en una página sin cifrar (estado 200).",
+      "fix": "Configurar una redirección permanente (301) de HTTP a HTTPS en el hosting."
+    },
+    {
+      "id": "hdr-ref",
+      "severity": "low",
+      "title": "Falta Referrer-Policy",
+      "detail": "Las URLs internas de tu sitio se filtran a terceros al hacer clic en enlaces salientes.",
+      "fix": "Añadir: Referrer-Policy: strict-origin-when-cross-origin"
+    },
+    {
+      "id": "hdr-pp",
+      "severity": "low",
+      "title": "Falta Permissions-Policy",
+      "detail": "No se restringe qué APIs del navegador (cámara, micrófono, geolocalización) pueden usar los scripts embebidos.",
+      "fix": "Añadir: Permissions-Policy: camera=(), microphone=(), geolocation=()"
+    },
+    {
+      "id": "dns-caa-missing",
+      "severity": "low",
+      "title": "Sin registro CAA",
+      "detail": "Cualquier autoridad certificadora puede emitir un certificado para tu dominio.",
+      "fix": "Publicar CAA: 0 issue \"letsencrypt.org\" (o tu CA)."
+    }
+  ],
+  "evidence": {
+    "tls": {
+      "protocol": "TLSv1.3",
+      "cipher": "TLS_AES_256_GCM_SHA384",
+      "issuer": "SSL Corporation",
+      "subject": "example.com",
+      "validTo": "Oct 27 22:17:21 2026 GMT",
+      "daysUntilExpiry": 31,
+      "chainAuthorized": true,
+      "handshakeMs": 119
+    },
+    "http": {
+      "statusCode": 200,
+      "headersEvaluated": true,
+      "server": "cloudflare",
+      "poweredBy": null,
+      "presentSecurityHeaders": [],
+      "cookieCount": 0
+    },
+    "dns": {
+      "spf": "v=spf1 -all",
+      "dmarc": "v=DMARC1;p=reject;sp=reject;adkim=s;aspf=s",
+      "mxCount": 0,
+      "mxReadReliable": true,
+      "mxHosts": [],
+      "dkimSelectorsFound": [],
+      "caaCount": 0,
+      "apexTxtCount": 2,
+      "apexReadReliable": true
+    },
+    "redirect": {
+      "httpStatus": 200,
+      "location": null,
+      "redirectsToHttps": false
+    }
+  },
+  "reachable": {
+    "tls": true,
+    "http": true,
+    "dns": true
+  }
+}

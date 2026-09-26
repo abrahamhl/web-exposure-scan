@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E-mail and web security check — example.com</title>
+<style>:root{--band:#b42318}
+ *{box-sizing:border-box}
+ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:#101828;margin:0;background:#f2f4f7;line-height:1.5}
+ .page{max-width:880px;margin:0 auto;background:#fff;padding:40px 44px 48px}
+ header{border-bottom:3px solid var(--band);padding-bottom:16px;margin-bottom:22px}
+ h1{font-size:22px;margin:0 0 6px}
+ .meta{color:#475467;font-size:13px}
+ h3{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:#475467;margin:28px 0 8px}
+ table{width:100%;border-collapse:collapse;font-size:14px}
+ td,th{border-bottom:1px solid #eaecf0;padding:11px 8px;vertical-align:top;text-align:left}
+ th{font-size:12px;color:#475467;font-weight:600}
+ .sev{color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:3px;white-space:nowrap}
+ .t{font-weight:600}
+ .d{color:#475467;font-size:13px;margin-top:3px}
+ .fix{color:#067647;font-size:13px;margin-top:5px}
+ .box{border:1px solid #d0d5dd;border-radius:8px;padding:14px 16px;margin:18px 0;font-size:14px}
+ .box b{display:block;margin-bottom:4px}
+ .box a{color:#175cd3}
+ .ev{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:#475467;
+     background:#f9fafb;border:1px solid #eaecf0;border-radius:6px;padding:12px;word-break:break-all}
+ footer{margin-top:30px;padding-top:14px;border-top:1px solid #eaecf0;color:#667085;font-size:12px}
+ @media (max-width:600px){.page{padding:22px 16px}.tiles{grid-template-columns:repeat(2,1fr)!important}}
+ @media print{body{background:#fff}.page{padding:0;max-width:none}a{color:inherit;text-decoration:none}}
+
+ .score{display:flex;gap:24px;align-items:center;margin:20px 0;padding:18px 20px;background:#f9fafb;border:1px solid #eaecf0;border-radius:8px}
+ .dial{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+       background:conic-gradient(var(--band) calc(var(--p)*1%), #eaecf0 0);}
+ .dial i{width:74px;height:74px;border-radius:50%;background:#fff;display:grid;place-items:center;
+         font-style:normal;font-size:24px;font-weight:700;color:var(--band)}
+ .score h2{margin:0 0 4px;font-size:17px}
+ .score p{margin:0;color:#475467;font-size:14px}
+ .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+ .tile{border:1px solid #eaecf0;border-radius:7px;padding:10px;text-align:center}
+ .tile b{display:block;font-size:20px}
+ .tile span{font-size:11px;color:#475467;text-transform:uppercase;letter-spacing:.06em}
+</style></head><body><div class="page">
+<header>
+  <h1>E-mail and web security check — example.com</h1>
+  <div class="meta">AUX Design · 26 September 2026 · passive check of public settings</div>
+</header>
+
+<div class="score">
+  <div class="dial" style="--p:73"><i>73</i></div>
+  <div>
+    <h2>Rating: RED</h2>
+    <p>We found <strong>8</strong> improvement point(s) in the public settings of example.com. Everything below is visible to anyone from outside; nothing was logged into or changed.</p>
+  </div>
+</div>
+
+<div class="tiles">
+  <div class="tile"><b style="color:#b42318">0</b><span>Critical</span></div><div class="tile"><b style="color:#c4320a">2</b><span>High</span></div><div class="tile"><b style="color:#a15c07">3</b><span>Medium</span></div><div class="tile"><b style="color:#475467">3</b><span>Low</span></div>
+</div>
+
+<h3>Website and certificate</h3><table>
+    <tr>
+      <td style="color:#98a2b3;width:26px">1</td>
+      <td style="width:78px"><span class="sev" style="background:#c4320a">HIGH</span></td>
+      <td>
+        <div class="t">HSTS missing (Strict-Transport-Security)</div>
+        <div class="d">Without HSTS a first visit can happen over plain HTTP, for example on public Wi-Fi.</div>
+        <div class="fix"><strong>Fix:</strong> Add: Strict-Transport-Security: max-age=31536000; includeSubDomains</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">2</td>
+      <td style="width:78px"><span class="sev" style="background:#c4320a">HIGH</span></td>
+      <td>
+        <div class="t">Content-Security-Policy missing</div>
+        <div class="d">CSP limits which scripts the page may load. Without it an injected script runs freely.</div>
+        <div class="fix"><strong>Fix:</strong> Start in report-only mode: Content-Security-Policy-Report-Only: default-src 'self', then tighten.</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">3</td>
+      <td style="width:78px"><span class="sev" style="background:#a15c07">MEDIUM</span></td>
+      <td>
+        <div class="t">X-Frame-Options missing</div>
+        <div class="d">The site can be loaded inside another site’s frame (clickjacking).</div>
+        <div class="fix"><strong>Fix:</strong> Add: X-Frame-Options: SAMEORIGIN (or frame-ancestors in the CSP).</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">4</td>
+      <td style="width:78px"><span class="sev" style="background:#a15c07">MEDIUM</span></td>
+      <td>
+        <div class="t">X-Content-Type-Options missing</div>
+        <div class="d">The browser may guess a file’s type and run something as script that is not.</div>
+        <div class="fix"><strong>Fix:</strong> Add: X-Content-Type-Options: nosniff</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">5</td>
+      <td style="width:78px"><span class="sev" style="background:#a15c07">MEDIUM</span></td>
+      <td>
+        <div class="t">http:// does not redirect to https://</div>
+        <div class="d">Typing example.com without https leaves the visitor on an unencrypted page (status 200).</div>
+        <div class="fix"><strong>Fix:</strong> Set a permanent (301) redirect from HTTP to HTTPS at the hosting provider.</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">6</td>
+      <td style="width:78px"><span class="sev" style="background:#475467">LOW</span></td>
+      <td>
+        <div class="t">Referrer-Policy missing</div>
+        <div class="d">Internal URLs can leak to third-party sites when someone clicks an outbound link.</div>
+        <div class="fix"><strong>Fix:</strong> Add: Referrer-Policy: strict-origin-when-cross-origin</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">7</td>
+      <td style="width:78px"><span class="sev" style="background:#475467">LOW</span></td>
+      <td>
+        <div class="t">Permissions-Policy missing</div>
+        <div class="d">Nothing restricts which browser features (camera, microphone, location) embedded scripts may use.</div>
+        <div class="fix"><strong>Fix:</strong> Add: Permissions-Policy: camera=(), microphone=(), geolocation=()</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">8</td>
+      <td style="width:78px"><span class="sev" style="background:#475467">LOW</span></td>
+      <td>
+        <div class="t">No CAA record</div>
+        <div class="d">Any certificate authority may issue a certificate for this domain.</div>
+        <div class="fix"><strong>Fix:</strong> Publish CAA: 0 issue &quot;letsencrypt.org&quot; (or your own CA).</div>
+      </td>
+    </tr></table>
+
+<div class="box"><b>Check it yourself</b>You don’t have to take our word for it. The free test <a href="https://internet.nl/mail/example.com/">internet.nl/mail/example.com</a> by the Dutch Internet Standards Platform (NCSC-NL, SIDN and others) measures the same e-mail settings.</div>
+
+<h3>Offer <span style="text-transform:none;letter-spacing:0">(excl. VAT)</span></h3>
+<table>
+    <tr style="background:#f0f9ff">
+      <td><div class="t">Website hardening (headers &amp; HTTPS) <span class="sev" style="background:#175cd3">recommended</span></div>
+          <div class="d">HTTPS redirect and security headers at your hosting or CMS, with re-check. Price depends on the hosting; fixed quote up front.</div></td>
+      <td style="text-align:right;white-space:nowrap;font-weight:700">from € 149</td>
+    </tr>
+    <tr>
+      <td><div class="t">Watch</div>
+          <div class="d">Monthly re-check of this domain and its DMARC reports; a message when something changes or breaks. Cancel monthly.</div></td>
+      <td style="text-align:right;white-space:nowrap;font-weight:700">€ 15/month</td>
+    </tr></table>
+
+<h3>Technical evidence</h3>
+<div class="ev">
+TLS: TLSv1.3 · TLS_AES_256_GCM_SHA384 · SSL Corporation · Oct 27 22:17:21 2026 GMT<br>
+HTTP: 200 · server cloudflare · headers 0/6 · http→https NO<br>
+SPF: v=spf1 -all<br>
+DMARC: v=DMARC1;p=reject;sp=reject;adkim=s;aspf=s<br>
+MX 0 · DKIM n/a · CAA 0
+</div>
+
+<footer>
+Generated by web-exposure-scan v1.1.0 on 26 September 2026. Passive checks only: one TLS handshake, one HTTPS and one HTTP request to the homepage, and public DNS lookups. Nothing was logged into or changed.<br>
+AUX Design — auxdesign.nl
+</footer>
+</div></body></html>

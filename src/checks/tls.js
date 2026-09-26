@@ -22,7 +22,7 @@ export function checkTls(domain, { timeout = 10000 } = {}) {
 
         if (!authorized) {
           findings.push({
-            id: 'tls-invalid-chain', severity: 'critical',
+            id: 'tls-invalid-chain', severity: 'critical', params: { authError: authError || null },
             title: 'Certificado TLS no válido',
             detail: `El navegador rechaza el certificado (${authError || 'cadena no verificable'}). Chrome y Firefox mostrarán "No es seguro".`,
             fix: 'Reemitir el certificado con una CA de confianza (Let’s Encrypt sirve y es gratis) e instalar la cadena intermedia completa.'
@@ -34,14 +34,14 @@ export function checkTls(domain, { timeout = 10000 } = {}) {
           daysLeft = Math.floor((new Date(cert.valid_to) - Date.now()) / 86400000);
           if (daysLeft < 0) {
             findings.push({
-              id: 'tls-expired', severity: 'critical',
+              id: 'tls-expired', severity: 'critical', params: { days: Math.abs(daysLeft), validTo: cert.valid_to },
               title: 'Certificado TLS caducado',
               detail: `Caducó hace ${Math.abs(daysLeft)} días (${cert.valid_to}).`,
               fix: 'Renovar de inmediato y automatizar la renovación (certbot / ACME).'
             });
           } else if (daysLeft < 21) {
             findings.push({
-              id: 'tls-expiring', severity: 'high',
+              id: 'tls-expiring', severity: 'high', params: { days: daysLeft, validTo: cert.valid_to },
               title: 'Certificado TLS a punto de caducar',
               detail: `Le quedan ${daysLeft} días (caduca el ${cert.valid_to}).`,
               fix: 'Renovar ya y activar la renovación automática.'
@@ -51,7 +51,7 @@ export function checkTls(domain, { timeout = 10000 } = {}) {
 
         if (protocol && WEAK_PROTOCOLS.has(protocol)) {
           findings.push({
-            id: 'tls-weak-protocol', severity: 'high',
+            id: 'tls-weak-protocol', severity: 'high', params: { protocol },
             title: `Protocolo TLS obsoleto (${protocol})`,
             detail: 'Protocolos anteriores a TLS 1.2 están retirados y suspenden cualquier cuestionario de seguridad.',
             fix: 'Habilitar únicamente TLS 1.2 y TLS 1.3 en el servidor o el CDN.'
@@ -60,7 +60,7 @@ export function checkTls(domain, { timeout = 10000 } = {}) {
 
         if (cipher && cipher.name && WEAK_CIPHER_HINTS.some((re) => re.test(cipher.name))) {
           findings.push({
-            id: 'tls-weak-cipher', severity: 'medium',
+            id: 'tls-weak-cipher', severity: 'medium', params: { cipher: cipher.name },
             title: `Suite de cifrado débil (${cipher.name})`,
             detail: 'La suite negociada usa primitivas consideradas débiles.',
             fix: 'Restringir la lista de cifrados a suites AEAD modernas (AES-GCM, ChaCha20-Poly1305).'
@@ -90,7 +90,7 @@ export function checkTls(domain, { timeout = 10000 } = {}) {
 
 function tlsUnreachable(msg) {
   return {
-    id: 'tls-unreachable', severity: 'critical',
+    id: 'tls-unreachable', severity: 'critical', params: { msg },
     title: 'No se pudo establecer HTTPS',
     detail: `El puerto 443 no respondió correctamente (${msg}). El sitio puede estar sirviéndose solo por HTTP.`,
     fix: 'Publicar el sitio por HTTPS con un certificado válido y redirigir todo el tráfico HTTP a HTTPS.'
