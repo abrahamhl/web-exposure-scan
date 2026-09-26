@@ -1,7 +1,0 @@
-[
-  {
-    "domain": "auxdesign.nl",
-    "status": "inconclusive",
-    "reason": "Este equipo no puede resolver DNS público (ni siquiera un dominio de control). El escaneo se aborta: cualquier resultado sería un falso positivo. Ejecútalo desde una red sin restricciones de salida."
-  }
-]

@@ -43,7 +43,7 @@ export function checkHeaders(domain, { timeout = 12000 } = {}) {
       // Afirmar "te faltan cabeceras" sobre un 403 es un falso positivo.
       const trustworthy = code >= 200 && code < 400;
       if (!trustworthy) {
-        findings.push({ id: 'http-abnormal-status', severity: 'low',
+        findings.push({ id: 'http-abnormal-status', severity: 'low', params: { code },
           title: `La portada respondió ${code}, no una página normal`,
           detail: 'Puede ser un WAF o un bloqueo a clientes sin navegador. Las cabeceras de seguridad no se evalúan porque las de una página de error no representan al sitio.',
           fix: 'Repetir la comprobación desde un navegador real o permitir el user-agent del escáner.' });
@@ -66,7 +66,7 @@ export function checkHeaders(domain, { timeout = 12000 } = {}) {
       if (hsts) {
         const m = /max-age=(\d+)/i.exec(hsts);
         if (m && Number(m[1]) < 15552000) {
-          findings.push({ id: 'hdr-hsts-short', severity: 'low',
+          findings.push({ id: 'hdr-hsts-short', severity: 'low', params: { maxAge: Number(m[1]) },
             title: 'HSTS con max-age demasiado corto',
             detail: `max-age=${m[1]} (menos de 180 días). Reduce mucho su eficacia.`,
             fix: 'Subir a max-age=31536000 (1 año).' });
@@ -74,13 +74,13 @@ export function checkHeaders(domain, { timeout = 12000 } = {}) {
       }
 
       if (h['server'] && /\d+\.\d+/.test(h['server'])) {
-        findings.push({ id: 'hdr-server-version', severity: 'low',
+        findings.push({ id: 'hdr-server-version', severity: 'low', params: { server: h['server'] },
           title: `El servidor publica su versión exacta (${h['server']})`,
           detail: 'Facilita a un atacante emparejar tu versión con exploits públicos conocidos.',
           fix: 'Ocultar la versión: server_tokens off (nginx) o ServerTokens Prod (Apache).' });
       }
       if (h['x-powered-by']) {
-        findings.push({ id: 'hdr-powered-by', severity: 'low',
+        findings.push({ id: 'hdr-powered-by', severity: 'low', params: { value: h['x-powered-by'] },
           title: `Cabecera X-Powered-By expuesta (${h['x-powered-by']})`,
           detail: 'Revela el framework y su versión sin ninguna necesidad funcional.',
           fix: 'Eliminar la cabecera (app.disable("x-powered-by") en Express).' });
@@ -93,7 +93,7 @@ export function checkHeaders(domain, { timeout = 12000 } = {}) {
         if (!/;\s*secure/i.test(c)) flags.push('Secure');
         if (!/;\s*httponly/i.test(c)) flags.push('HttpOnly');
         if (flags.length) {
-          findings.push({ id: 'cookie-flags-' + name, severity: 'medium',
+          findings.push({ id: 'cookie-flags-' + name, key: 'cookie-flags', severity: 'medium', params: { name, flags },
             title: `Cookie "${name}" sin ${flags.join(' ni ')}`,
             detail: 'Una cookie sin estas marcas puede viajar en claro o ser leída por JavaScript inyectado.',
             fix: `Emitir la cookie con: ${flags.join('; ')}; SameSite=Lax` });
@@ -117,9 +117,34 @@ export function checkHeaders(domain, { timeout = 12000 } = {}) {
 
 function unreachable(msg) {
   return { ok: false, evidence: { error: msg }, findings: [{
-    id: 'http-unreachable', severity: 'high',
+    id: 'http-unreachable', severity: 'high', params: { msg },
     title: 'No se pudo leer la home por HTTPS',
     detail: `La petición falló (${msg}), así que no se pudieron comprobar las cabeceras de seguridad.`,
     fix: 'Revisar que el sitio responde en https:// y que no bloquea peticiones sin navegador.'
   }]};
+}
+
+// Does plain http:// send the visitor to https://? One GET, no redirects followed.
+// If port 80 is closed or errors, we claim nothing: a closed port 80 is not a defect.
+export function checkHttpRedirect(domain, { timeout = 8000 } = {}) {
+  return new Promise((resolve) => {
+    const req = http.request({ host: domain, port: 80, path: '/', method: 'GET', timeout,
+      headers: { 'User-Agent': 'web-exposure-scan/1.1 (+defensive posture check)' } }, (res) => {
+      res.resume();
+      const code = res.statusCode || 0;
+      const loc = res.headers.location || '';
+      const redirectsToHttps = code >= 300 && code < 400 && /^https:\/\//i.test(loc);
+      const findings = [];
+      if (code >= 200 && code < 300) {
+        findings.push({ id: 'http-no-https-redirect', severity: 'medium', params: { domain, code },
+          title: 'http:// no redirige a https://',
+          detail: `Quien escribe ${domain} sin https se queda en una página sin cifrar (estado ${code}).`,
+          fix: 'Configurar una redirección permanente (301) de HTTP a HTTPS en el hosting.' });
+      }
+      resolve({ ok: true, findings, evidence: { httpStatus: code, location: loc || null, redirectsToHttps } });
+    });
+    req.on('timeout', () => { req.destroy(); resolve({ ok: false, findings: [], evidence: { error: 'timeout' } }); });
+    req.on('error', (e) => resolve({ ok: false, findings: [], evidence: { error: e.code || e.message } }));
+    req.end();
+  });
 }

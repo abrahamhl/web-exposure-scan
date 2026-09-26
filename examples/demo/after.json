@@ -1,0 +1,55 @@
+{
+  "tool": "web-exposure-scan",
+  "version": "1.1.0",
+  "status": "ok",
+  "domain": "bakkerij-voorbeeld.example",
+  "demo": true,
+  "startedAt": "2026-10-27T14:30:00.000Z",
+  "finishedAt": "2026-10-27T14:30:00.000Z",
+  "risk": {
+    "score": 3,
+    "band": "VERDE-BAJO"
+  },
+  "findings": [
+    {
+      "id": "dns-caa-missing",
+      "severity": "low",
+      "title": "Sin CAA",
+      "detail": "",
+      "fix": ""
+    }
+  ],
+  "evidence": {
+    "tls": {
+      "protocol": "TLSv1.3",
+      "cipher": "TLS_AES_128_GCM_SHA256",
+      "issuer": "Let's Encrypt",
+      "validTo": "Dec 14 09:00:00 2026 GMT",
+      "daysUntilExpiry": 79,
+      "chainAuthorized": true
+    },
+    "http": {
+      "statusCode": 200,
+      "server": null,
+      "presentSecurityHeaders": [
+        "strict-transport-security",
+        "x-content-type-options"
+      ],
+      "redirect": true
+    },
+    "dns": {
+      "spf": "v=spf1 include:spf.protection.outlook.com -all",
+      "dmarc": "v=DMARC1; p=reject; rua=mailto:rapport@bakkerij-voorbeeld.example; adkim=r; aspf=r",
+      "mxCount": 1,
+      "dkimSelectorsFound": [
+        "selector1",
+        "selector2"
+      ],
+      "caaCount": 0
+    },
+    "redirect": {
+      "httpStatus": 301,
+      "redirectsToHttps": true
+    }
+  }
+}

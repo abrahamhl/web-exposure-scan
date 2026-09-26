@@ -33,11 +33,11 @@ sabes arreglarlo.
 La herramienta no solo detecta: **te escribe el informe y te calcula el presupuesto**.
 Tú solo lo revisas y lo mandas.
 
-Un ciclo real:
-1. Ejecutas el escáner sobre 20 negocios de tu ciudad (con permiso).
-2. Sale un PDF por cada uno, con su nombre, sus fallos y un precio.
-3. Mandas los 5 que peor están.
-4. Con que uno diga que sí, ya has cobrado.
+Un ciclo real (detalle en `commercial/SALES_PLAYBOOK.md`):
+1. Hablas con el dueño y hacéis juntos el test gratuito de internet.nl en su móvil.
+2. Si sale rojo y quiere que lo mires, ejecutas el escáner (ya con permiso) y le dejas el informe en neerlandés con los paquetes y precios cerrados.
+3. Haces el trabajo siguiendo `commercial/DELIVERY_RUNBOOK.md`.
+4. `wxs compare` genera el informe antes/después. Con eso se factura.
 
 ## Cómo se usa (3 comandos)
 

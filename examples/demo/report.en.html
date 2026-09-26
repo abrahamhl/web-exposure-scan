@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E-mail and web security check — bakkerij-voorbeeld.example</title>
+<style>:root{--band:#dc6803}
+ *{box-sizing:border-box}
+ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:#101828;margin:0;background:#f2f4f7;line-height:1.5}
+ .page{max-width:880px;margin:0 auto;background:#fff;padding:40px 44px 48px}
+ header{border-bottom:3px solid var(--band);padding-bottom:16px;margin-bottom:22px}
+ h1{font-size:22px;margin:0 0 6px}
+ .meta{color:#475467;font-size:13px}
+ h3{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:#475467;margin:28px 0 8px}
+ table{width:100%;border-collapse:collapse;font-size:14px}
+ td,th{border-bottom:1px solid #eaecf0;padding:11px 8px;vertical-align:top;text-align:left}
+ th{font-size:12px;color:#475467;font-weight:600}
+ .sev{color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:3px;white-space:nowrap}
+ .t{font-weight:600}
+ .d{color:#475467;font-size:13px;margin-top:3px}
+ .fix{color:#067647;font-size:13px;margin-top:5px}
+ .box{border:1px solid #d0d5dd;border-radius:8px;padding:14px 16px;margin:18px 0;font-size:14px}
+ .box b{display:block;margin-bottom:4px}
+ .box a{color:#175cd3}
+ .ev{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:#475467;
+     background:#f9fafb;border:1px solid #eaecf0;border-radius:6px;padding:12px;word-break:break-all}
+ footer{margin-top:30px;padding-top:14px;border-top:1px solid #eaecf0;color:#667085;font-size:12px}
+ @media (max-width:600px){.page{padding:22px 16px}.tiles{grid-template-columns:repeat(2,1fr)!important}}
+ @media print{body{background:#fff}.page{padding:0;max-width:none}a{color:inherit;text-decoration:none}}
+
+ .score{display:flex;gap:24px;align-items:center;margin:20px 0;padding:18px 20px;background:#f9fafb;border:1px solid #eaecf0;border-radius:8px}
+ .dial{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+       background:conic-gradient(var(--band) calc(var(--p)*1%), #eaecf0 0);}
+ .dial i{width:74px;height:74px;border-radius:50%;background:#fff;display:grid;place-items:center;
+         font-style:normal;font-size:24px;font-weight:700;color:var(--band)}
+ .score h2{margin:0 0 4px;font-size:17px}
+ .score p{margin:0;color:#475467;font-size:14px}
+ .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+ .tile{border:1px solid #eaecf0;border-radius:7px;padding:10px;text-align:center}
+ .tile b{display:block;font-size:20px}
+ .tile span{font-size:11px;color:#475467;text-transform:uppercase;letter-spacing:.06em}
+</style></head><body><div class="page">
+<header>
+  <h1>E-mail and web security check — bakkerij-voorbeeld.example</h1>
+  <div class="meta">AUX Design (DEMO — fictief bedrijf) · 28 September 2026 · passive check of public settings</div>
+</header>
+
+<div class="score">
+  <div class="dial" style="--p:62"><i>62</i></div>
+  <div>
+    <h2>Rating: AMBER</h2>
+    <p>We found <strong>6</strong> improvement point(s) in the public settings of bakkerij-voorbeeld.example. Everything below is visible to anyone from outside; nothing was logged into or changed.</p>
+  </div>
+</div>
+
+<div class="tiles">
+  <div class="tile"><b style="color:#b42318">0</b><span>Critical</span></div><div class="tile"><b style="color:#c4320a">2</b><span>High</span></div><div class="tile"><b style="color:#a15c07">2</b><span>Medium</span></div><div class="tile"><b style="color:#475467">2</b><span>Low</span></div>
+</div>
+
+<h3>E-mail</h3><table>
+    <tr>
+      <td style="color:#98a2b3;width:26px">1</td>
+      <td style="width:78px"><span class="sev" style="background:#c4320a">HIGH</span></td>
+      <td>
+        <div class="t">No DMARC record</div>
+        <div class="d">Without DMARC, receiving mail servers have no instruction for mail pretending to be your domain, and you get no reports on who tries.</div>
+        <div class="fix"><strong>Fix:</strong> Publish a TXT record at _dmarc: v=DMARC1; p=none; rua=mailto:&lt;report-address&gt; — then tighten step by step.</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">2</td>
+      <td style="width:78px"><span class="sev" style="background:#a15c07">MEDIUM</span></td>
+      <td>
+        <div class="t">SPF is in soft mode</div>
+        <div class="d">The record ends in &quot;~all&quot;: receivers may flag forged mail but will not reject it.</div>
+        <div class="fix"><strong>Fix:</strong> Once all legitimate senders are known, close with -all (together with DMARC).</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">3</td>
+      <td style="width:78px"><span class="sev" style="background:#475467">LOW</span></td>
+      <td>
+        <div class="t">No DKIM found on common selectors</div>
+        <div class="d">Checked: selector1, selector2, google, default. DKIM may exist under another selector; that cannot be determined from outside. Without DKIM, DMARC often fails on forwarded mail.</div>
+        <div class="fix"><strong>Fix:</strong> Enable DKIM signing at the mail provider (Microsoft 365, Google Workspace, hosting) and publish the DNS records.</div>
+      </td>
+    </tr></table><h3>Website and certificate</h3><table>
+    <tr>
+      <td style="color:#98a2b3;width:26px">1</td>
+      <td style="width:78px"><span class="sev" style="background:#c4320a">HIGH</span></td>
+      <td>
+        <div class="t">HSTS missing (Strict-Transport-Security)</div>
+        <div class="d">Without HSTS a first visit can happen over plain HTTP, for example on public Wi-Fi.</div>
+        <div class="fix"><strong>Fix:</strong> Add: Strict-Transport-Security: max-age=31536000; includeSubDomains</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">2</td>
+      <td style="width:78px"><span class="sev" style="background:#a15c07">MEDIUM</span></td>
+      <td>
+        <div class="t">http:// does not redirect to https://</div>
+        <div class="d">Typing bakkerij-voorbeeld.example without https leaves the visitor on an unencrypted page (status 200).</div>
+        <div class="fix"><strong>Fix:</strong> Set a permanent (301) redirect from HTTP to HTTPS at the hosting provider.</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="color:#98a2b3;width:26px">3</td>
+      <td style="width:78px"><span class="sev" style="background:#475467">LOW</span></td>
+      <td>
+        <div class="t">No CAA record</div>
+        <div class="d">Any certificate authority may issue a certificate for this domain.</div>
+        <div class="fix"><strong>Fix:</strong> Publish CAA: 0 issue &quot;letsencrypt.org&quot; (or your own CA).</div>
+      </td>
+    </tr></table>
+
+<div class="box"><b>Check it yourself</b>You don’t have to take our word for it. The free test <a href="https://internet.nl/mail/bakkerij-voorbeeld.example/">internet.nl/mail/bakkerij-voorbeeld.example</a> by the Dutch Internet Standards Platform (NCSC-NL, SIDN and others) measures the same e-mail settings.</div>
+
+<h3>Offer <span style="text-transform:none;letter-spacing:0">(excl. VAT)</span></h3>
+<table>
+    <tr>
+      <td><div class="t">Mail lock Basic</div>
+          <div class="d">Correct SPF, DKIM enabled where the mail provider supports it, DMARC with reporting (p=none), and a before/after report. Done within 1 working day of DNS access.</div></td>
+      <td style="text-align:right;white-space:nowrap;font-weight:700">€ 149</td>
+    </tr>
+    <tr style="background:#f0f9ff">
+      <td><div class="t">Mail lock Complete <span class="sev" style="background:#175cd3">recommended</span></div>
+          <div class="d">Everything in Basic, plus: map who sends mail on your behalf (webshop, accounting software, newsletter), 4 weeks of report review and a step-by-step move to DMARC p=reject. Closes with a hand-over report and an internet.nl test.</div></td>
+      <td style="text-align:right;white-space:nowrap;font-weight:700">€ 349</td>
+    </tr>
+    <tr>
+      <td><div class="t">Website hardening (headers &amp; HTTPS)</div>
+          <div class="d">HTTPS redirect and security headers at your hosting or CMS, with re-check. Price depends on the hosting; fixed quote up front.</div></td>
+      <td style="text-align:right;white-space:nowrap;font-weight:700">from € 149</td>
+    </tr>
+    <tr>
+      <td><div class="t">Watch</div>
+          <div class="d">Monthly re-check of this domain and its DMARC reports; a message when something changes or breaks. Cancel monthly.</div></td>
+      <td style="text-align:right;white-space:nowrap;font-weight:700">€ 15/month</td>
+    </tr></table>
+
+<h3>Technical evidence</h3>
+<div class="ev">
+TLS: TLSv1.3 · TLS_AES_128_GCM_SHA256 · Let's Encrypt · Dec 14 09:00:00 2026 GMT<br>
+HTTP: 200 · server hidden · headers 1/6 · http→https NO<br>
+SPF: v=spf1 include:spf.protection.outlook.com ~all<br>
+DMARC: NO<br>
+MX 1 · DKIM n/a · CAA 0
+</div>
+
+<footer>
+Generated by web-exposure-scan v1.1.0 on 28 September 2026. Passive checks only: one TLS handshake, one HTTPS and one HTTP request to the homepage, and public DNS lookups. Nothing was logged into or changed.<br>
+AUX Design (DEMO — fictief bedrijf) — auxdesign.nl
+</footer>
+</div></body></html>

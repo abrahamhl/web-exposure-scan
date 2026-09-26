@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Opleverrapport — bakkerij-voorbeeld.example</title>
+<style>:root{--band:#067647}
+ *{box-sizing:border-box}
+ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      color:#101828;margin:0;background:#f2f4f7;line-height:1.5}
+ .page{max-width:880px;margin:0 auto;background:#fff;padding:40px 44px 48px}
+ header{border-bottom:3px solid var(--band);padding-bottom:16px;margin-bottom:22px}
+ h1{font-size:22px;margin:0 0 6px}
+ .meta{color:#475467;font-size:13px}
+ h3{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:#475467;margin:28px 0 8px}
+ table{width:100%;border-collapse:collapse;font-size:14px}
+ td,th{border-bottom:1px solid #eaecf0;padding:11px 8px;vertical-align:top;text-align:left}
+ th{font-size:12px;color:#475467;font-weight:600}
+ .sev{color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:3px;white-space:nowrap}
+ .t{font-weight:600}
+ .d{color:#475467;font-size:13px;margin-top:3px}
+ .fix{color:#067647;font-size:13px;margin-top:5px}
+ .box{border:1px solid #d0d5dd;border-radius:8px;padding:14px 16px;margin:18px 0;font-size:14px}
+ .box b{display:block;margin-bottom:4px}
+ .box a{color:#175cd3}
+ .ev{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:#475467;
+     background:#f9fafb;border:1px solid #eaecf0;border-radius:6px;padding:12px;word-break:break-all}
+ footer{margin-top:30px;padding-top:14px;border-top:1px solid #eaecf0;color:#667085;font-size:12px}
+ @media (max-width:600px){.page{padding:22px 16px}.tiles{grid-template-columns:repeat(2,1fr)!important}}
+ @media print{body{background:#fff}.page{padding:0;max-width:none}a{color:inherit;text-decoration:none}}
+
+ .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+ .kpi div{border:1px solid #eaecf0;border-radius:8px;padding:12px;text-align:center}
+ .kpi b{display:block;font-size:22px}
+ .kpi span{font-size:12px;color:#475467}
+</style></head><body><div class="page">
+<header>
+  <h1>Opleverrapport — bakkerij-voorbeeld.example</h1>
+  <div class="meta">AUX Design (DEMO — fictief bedrijf) · Eerste controle: 28 september 2026 · Hercontrole: 27 oktober 2026</div>
+</header>
+
+<div class="kpi">
+  <div><b style="color:#067647">5</b><span>Opgelost</span></div>
+  <div><b style="color:#a15c07">1</b><span>Nog open</span></div>
+  <div><b>62 → 3</b><span>Score (lager is beter)</span></div>
+</div>
+
+<h3>Opgelost</h3><table><tr><td style="width:28px;font-size:18px">✓</td>
+          <td style="width:78px"><span class="sev" style="background:#c4320a">HOOG</span></td>
+          <td><div class="t">Geen DMARC-record</div></td></tr><tr><td style="width:28px;font-size:18px">✓</td>
+          <td style="width:78px"><span class="sev" style="background:#c4320a">HOOG</span></td>
+          <td><div class="t">HSTS ontbreekt (Strict-Transport-Security)</div></td></tr><tr><td style="width:28px;font-size:18px">✓</td>
+          <td style="width:78px"><span class="sev" style="background:#a15c07">MIDDEL</span></td>
+          <td><div class="t">SPF staat in zachte modus</div></td></tr><tr><td style="width:28px;font-size:18px">✓</td>
+          <td style="width:78px"><span class="sev" style="background:#a15c07">MIDDEL</span></td>
+          <td><div class="t">http:// stuurt niet door naar https://</div></td></tr><tr><td style="width:28px;font-size:18px">✓</td>
+          <td style="width:78px"><span class="sev" style="background:#475467">LAAG</span></td>
+          <td><div class="t">Geen DKIM gevonden op gangbare selectors</div></td></tr></table>
+<h3>Nog open</h3><table><tr><td style="width:28px;font-size:18px">•</td>
+          <td style="width:78px"><span class="sev" style="background:#475467">LAAG</span></td>
+          <td><div class="t">Geen CAA-record</div></td></tr></table>
+
+
+<h3>DNS-instellingen na de werkzaamheden</h3>
+<div class="ev">SPF: v=spf1 include:spf.protection.outlook.com -all<br>DMARC: v=DMARC1; p=reject; rua=mailto:rapport@bakkerij-voorbeeld.example; adkim=r; aspf=r<br>DKIM: selector1, selector2</div>
+
+<div class="box"><b>Controleer het zelf</b>U hoeft ons niet op ons woord te geloven. De gratis test <a href="https://internet.nl/mail/bakkerij-voorbeeld.example/">internet.nl/mail/bakkerij-voorbeeld.example</a> van het Internetstandaardenplatform (o.a. NCSC-NL, SIDN, Ministerie van EZ) meet dezelfde e-mailinstellingen.</div>
+
+<footer>Gemaakt met web-exposure-scan v1.1.0 op 27 oktober 2026. Alleen passieve controles: één TLS-verbinding, één HTTPS- en één HTTP-verzoek naar de homepage en publieke DNS-opvragingen. Er is nergens ingelogd en niets gewijzigd.<br>AUX Design (DEMO — fictief bedrijf) — auxdesign.nl</footer>
+</div></body></html>

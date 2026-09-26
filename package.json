@@ -1,15 +1,33 @@
 {
   "name": "web-exposure-scan",
-  "version": "1.0.0",
-  "description": "Defensive web exposure scanner: TLS, security headers and email-auth DNS posture, with a client-ready report.",
+  "version": "1.1.0",
+  "description": "Passive e-mail (SPF/DKIM/DMARC) and web exposure check with client-ready reports in Dutch, English and Spanish, plus before/after hand-over reports.",
   "license": "MIT",
   "type": "module",
-  "bin": { "wxs": "./bin/wxs.js" },
-  "engines": { "node": ">=18" },
+  "bin": {
+    "wxs": "./bin/wxs.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "scan": "node bin/wxs.js",
-    "test": "node --test test/unit.test.js"
+    "demo": "node scripts/demo.js --lang=nl && node scripts/demo.js --lang=en",
+    "test": "node --test test/unit.test.js",
+    "check": "node --check bin/wxs.js && node --check scripts/demo.js && node --test test/unit.test.js"
   },
-  "keywords": ["security","osint","defensive","tls","dmarc","spf","security-headers","audit"],
+  "keywords": [
+    "security",
+    "dmarc",
+    "spf",
+    "dkim",
+    "email-security",
+    "defensive",
+    "tls",
+    "security-headers",
+    "audit",
+    "netherlands",
+    "mkb"
+  ],
   "dependencies": {}
 }

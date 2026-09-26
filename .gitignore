@@ -3,3 +3,5 @@ out/
 *.local.json
 .env
 .env.*
+clientes/
+_summary.json
